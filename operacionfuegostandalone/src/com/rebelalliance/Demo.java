@@ -13,6 +13,8 @@ public class Demo {
 		// TODO Auto-generated method stub
 		double[] distances = new double[] { 8.00, 14.00, 33.00 };
 		getLocation(distances);
+		String[][] messages = new String[validWords.length][];
+		messages[0]=new String[] {"este", "lunes", "un", "mensaje", "secreto"};
 		getMessage(new String[] {"este", "lunes", "un", "mensaje", "secreto"});
 
 	}
@@ -25,7 +27,7 @@ public class Demo {
        
 		NonLinearLeastSquaresSolver solver = new NonLinearLeastSquaresSolver(
 				new TrilaterationFunction(positions, distances), new LevenbergMarquardtOptimizer());
-		Optimum optimum = solver.solve();
+		Optimum optimum = solver.solve(); 	
 
 		double[] calculatedPosition = optimum.getPoint().toArray();
 		System.out.println("posicion" + calculatedPosition[0]);

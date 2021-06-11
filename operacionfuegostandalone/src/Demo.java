@@ -8,15 +8,15 @@ import com.lemmingapex.trilateration.TrilaterationFunction;
 
 public class Demo {
 
+	static String [] validWords= new String[] {"este", "es", "un", "mensaje","uno","dos", "secreto"};
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		double[] distances = new double[] { 8.00, 14.00, 33.00 };
 		getLocation(distances);
+		String[][] messages = new String[validWords.length][];
 		getMessage(new String[] {"este", "lunes", "un", "mensaje", "secreto"});
-
 	}
 	
-	static String [] validWords= new String[] {"este", "es", "un", "mensaje","uno","dos", "secreto"};
+	
 
 	public static void getLocation(double[] distances) {
         
@@ -27,8 +27,7 @@ public class Demo {
 		Optimum optimum = solver.solve();
 
 		double[] calculatedPosition = optimum.getPoint().toArray();
-		System.out.println("posicion" + calculatedPosition[0]);
-
+		
 	}
 
 	
@@ -53,12 +52,8 @@ public class Demo {
 	}
 	
 	public static boolean isWord(String w) {
-		
-		
-			boolean contains = Arrays.stream(validWords).anyMatch(w::equals);
-		
+		boolean contains = Arrays.stream(validWords).anyMatch(w::equals);
 		return contains;
-		
 	}
 
 }

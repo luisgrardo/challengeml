@@ -66,3 +66,8 @@ http://operacionfuego-env-1.eba-43aauwab.us-east-2.elasticbeanstalk.com/topsecre
 Diagrama de paquete
 
 ![image](https://user-images.githubusercontent.com/12503508/121669020-84057f00-ca71-11eb-82b5-5c5f82399e90.png)
+
+Diagrama de Clases
+
+![operacionfuegoweb umlcd](https://user-images.githubusercontent.com/12503508/121837428-2c4a5c00-cc9b-11eb-9883-2ae74aa6e390.png)
+

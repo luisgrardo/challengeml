@@ -20,6 +20,12 @@ import com.rebelalliance.model.SateliteWrap;
 import com.rebelalliance.model.WrapInformation;
 import com.rebelalliance.service.SateliteService;
 
+/**
+ * Representa la implementacion de el servicio satelite
+ * 
+ * @author Luis Gerardo Espinosa Sampayo
+ *
+ */
 @Service
 public class SateliteServiceImpl implements SateliteService {
 	
@@ -29,6 +35,13 @@ public class SateliteServiceImpl implements SateliteService {
 	
 	double[][] positions = new double[][] { { -500.0, -200.0 }, { 100.0, -100.0 }, { 500.0, 100.0 } };
 
+	/**
+	 * 
+	 * Obtiene información mensaje descifrado y posición
+	 * @param satelites
+	 * @return
+	 * @throws RebelAllianceException
+	 */
 	@Override
 	public WrapInformation getInformation(SateliteWrap satelites)throws  RebelAllianceException{
 		WrapInformation information = new WrapInformation();
@@ -38,13 +51,10 @@ public class SateliteServiceImpl implements SateliteService {
 		}   
 		int i = 0;
 		List<List<String>> msgList = new ArrayList<List<String>>();
-		//List<String> li = new ArrayList<String>();
 		List<String> li =null;
 		for (Satelite satelite: satelites.getSatelite()) {
 			li = new ArrayList<String>();
 			for(String s : satelite.getMessage()) {
-				
-				
 				li.add(s);
 			}
 			
@@ -52,15 +62,15 @@ public class SateliteServiceImpl implements SateliteService {
 			distances[i]=satelite.getDistance();
 			i++;
 		}
-		
-	
-		
 		information.setMessage(getMessage(msgList));
-		
 		information.setPosition(getLocation(distances));
 		return information;
 	}
 
+	/**
+	 * @param messages
+	 * @return
+	 */
 	public String[] getMessageValid(String[] messages) {
 		String[] messageFinal = new String[messages.length];
 		int index = 0;
@@ -68,8 +78,6 @@ public class SateliteServiceImpl implements SateliteService {
 			if (true) {
 				messageFinal[index] = "";
 
-			} else {
-				messageFinal[index] = w;
 			}
 
 			index++;
@@ -81,6 +89,15 @@ public class SateliteServiceImpl implements SateliteService {
 
 	
 
+	/**
+	 * 
+	 * obitene la posicion  X e Y calculando con trilateracion y acercandose por arpoximacion Minimos cuadrados no lineales
+	 * utilizando el algoritmo de Levenberg-Marquardt
+	 * @param distances
+	 * @return  Position 
+	 */
+	
+	
 	public Position getLocation(double[] distances) {
 		NonLinearLeastSquaresSolver solver = new NonLinearLeastSquaresSolver(
 				new TrilaterationFunction(positions, distances), new LevenbergMarquardtOptimizer());
@@ -99,6 +116,11 @@ public class SateliteServiceImpl implements SateliteService {
 	
 	
 	
+	/**
+	 * forma el mensaje completo y remueve los caracteres en blanco 
+	 * @param msgList
+	 * @return String
+	 */
 	public List<String> getMsgWord(List<List<String>> msgList){
 
         List<String> listWords = new ArrayList<String>();
@@ -111,26 +133,36 @@ public class SateliteServiceImpl implements SateliteService {
         return listWords;
     }
 
+    /**
+     * borra el token 
+     * @param msgList
+     * @param size
+     */
     public void removeSpace(List<List<String>> msgList, int size){
 
-        int s = 0;
+        int sl = 0;
         for(int i = 0; i < msgList.size(); i++){
-            s = msgList.get(i).size();
-            msgList.set(i, msgList.get(i).subList(s-size, s));
+            sl = msgList.get(i).size();
+            msgList.set(i, msgList.get(i).subList(sl-size, sl));
         }
 
        
     }
 
+    /**
+     * analiza la lista y va racorriendo el token hasta no entontrar espacios en blanco 
+     * @param msgList
+     * @return
+     */
     public String organizarMensaje(List<List<String>> msgList){
 
-        String phrase = "";
-        for(List<String> m : msgList){
+        String token = "";
+        for(List<String> msl : msgList){
 
-            if(m.size()>0 && !m.get(0).equals("")){
-                phrase = (m.size() == 1) ? m.get(0) : m.get(0) + " ";
-                msgList.stream().forEach( s -> s.remove(0));
-                return  phrase + organizarMensaje(msgList);
+            if(msl.size()>0 && !msl.get(0).equals("")){
+                token = (msl.size() == 1) ? msl.get(0) : msl.get(0) + " ";
+                msgList.stream().forEach( sl -> sl.remove(0));
+                return  token + organizarMensaje(msgList);
             }
         }
        
@@ -166,5 +198,7 @@ public class SateliteServiceImpl implements SateliteService {
         Collections.sort(msg);
         return Arrays.equals(phrases.toArray(), msg.toArray());
     }
+
+	
 
 }

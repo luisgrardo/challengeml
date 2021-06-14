@@ -3,6 +3,7 @@ package com.rebelalliance.controller;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,31 +20,46 @@ import com.rebelalliance.model.Greeting;
 import com.rebelalliance.model.SateliteWrap;
 import com.rebelalliance.service.SateliteService;
 
+/**
+ * @author Luis Gerardo Espinosa Sampayo
+ * Clase representa el controlador Satelite, 
+ *
+ *
+ */
 @RestController
-public class SateliteController {
+public class SateliteController implements ErrorController{
+
+    private static final String PATH = "/error";
+
+    @RequestMapping(value = PATH)
+    public String error() {
+        return "Ocurrio un Error , verifique la ruta o el payload(JSON)";
+    }
+
 	
-	private static final String template = "Hello, %s!";
-	private final AtomicLong counter = new AtomicLong();
-	
+	/**
+	 * SateliteService 
+	 * 
+	 */
 	@Autowired
 	SateliteService sateliteService;
 
-	@GetMapping("/greeting")
-	public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
-		return new Greeting(counter.incrementAndGet(), String.format(template, name));
-	}
-
+	
+	/**
+	 * Servicio Rest para operacion topsecret 
+	 * @param satelites
+	 * @return regresa la entidad WrapInformation 
+	 */
 	@RequestMapping(value = "/topsecret", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity  topSecret(@RequestBody SateliteWrap satelites) {
-		
+	public ResponseEntity topSecret(@RequestBody SateliteWrap satelites) {
+
 		try {
-            return ResponseEntity.status(HttpStatus.OK).body(sateliteService.getInformation(satelites));
-        }catch (RebelAllianceException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        }
-		
-	
+			return ResponseEntity.status(HttpStatus.OK).body(sateliteService.getInformation(satelites));
+		} catch (RebelAllianceException e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+		}
+
 	}
 
 }
